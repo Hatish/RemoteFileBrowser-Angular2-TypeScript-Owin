@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Routing;
+using Microsoft.Owin;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.StaticFiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Owin;
@@ -20,7 +23,13 @@ namespace WindowsService1
     public void Configuration(IAppBuilder app)
     {
       var dir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "webdir");
-      app.UseStaticFiles();
+
+      var staticFilesOptions = new StaticFileOptions
+      {
+        RequestPath = new PathString(""),
+        FileSystem = new PhysicalFileSystem(dir)
+      };
+      app.UseStaticFiles(staticFilesOptions);
 
       var config = new HttpConfiguration();
       config.Formatters.Clear();
